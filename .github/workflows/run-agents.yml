@@ -1,0 +1,58 @@
+name: Run Agent on Push to Main
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/app/agents/**'
+      - 'src/app/tools/**'
+      - 'src/prompts/**'
+  workflow_dispatch:
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create .env file from secret
+        run: 'echo "$ENV" > src/.env'
+        shell: bash
+        env:
+          ENV: ${{ secrets.ENV }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r src/requirements.txt
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run initializer scripts
+        run: |
+          set -euo pipefail
+          echo "Running initializer scripts in src/app/agents"
+          for f in src/app/agents/*.py; do
+            # only run files that look like initializers or explicit scripts
+            case "$(basename "$f")" in
+              *_initializer.py|*initializer.py|run_*.py) )
+                echo "Executing $f";
+                python "$f";
+                ;;
+              *)
+                echo "Skipping $f";
+                ;;
+            esac
+          done
