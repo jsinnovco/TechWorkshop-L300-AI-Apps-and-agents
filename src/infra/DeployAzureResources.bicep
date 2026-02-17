@@ -228,6 +228,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-09-01' = {
   tags: tags
 }
 
+
 // Cosmos DB built-in data plane role IDs
 // Reference: https://learn.microsoft.com/connectors/documentdb/#microsoft-entra-id-authentication-and-cosmos-db-connector
 // var cosmosDbBuiltInDataReaderRoleId = '00000000-0000-0000-0000-000000000001'
