@@ -47,7 +47,7 @@ jobs:
           for f in src/app/agents/*.py; do
             # only run files that look like initializers or explicit scripts
             case "$(basename "$f")" in
-              *_initializer.py|*initializer.py|run_*.py) )
+              *_initializer.py|*initializer.py|run_*.py)
                 echo "Executing $f";
                 python "$f";
                 ;;
