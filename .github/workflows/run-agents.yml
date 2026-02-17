@@ -6,6 +6,7 @@ on:
     paths:
       - 'src/app/agents/**'
       - 'src/app/tools/**'
+      - 'src/app/tools/singleAgentExample.py'
       - 'src/prompts/**'
   workflow_dispatch:
 
